@@ -1,11 +1,20 @@
+import 'dart:collection';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'components/task.dart';
+import 'components/action_button.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
+Queue pendingTasks = new Queue();
+Queue completeTasks = new Queue();
+Queue canceledTasks = new Queue();
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -43,6 +52,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/counter.txt');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
               taskName: 'Go Shopping',
               taskState: States.pending,
             ),
+            ActionButton(),
 
             // const Text(
             //   'You have pushed the button this many times:',
